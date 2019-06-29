@@ -33,6 +33,9 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
+                      @guest
+                      <li><a class="nav-link" href="{{ route('viewfile') }}">Menu file</a>
+                      @endguest
 
                     </ul>
 
