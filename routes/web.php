@@ -18,4 +18,4 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/verification/{$token}','Auth\RegisterController@verification');
+Route::get('/verification/{token}','Auth\RegisterController@verification');

@@ -84,7 +84,8 @@ class RegisterController extends Controller
     }
     public function verification($token)
     {
-      $verify - Verification::where('token', $token)->first();
+      $verify = Verification::where('token', $token)->first();
+      // dd($verify);
       if(isset($verify)){
         $user = $verify->user;
         if(!$user->verified){
