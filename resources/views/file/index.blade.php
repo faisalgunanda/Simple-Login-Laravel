@@ -17,10 +17,21 @@
         <div class="card-body">
           <strong class="card-title">{{ $file->title}}</strong>
           <p class="card-text">{{$file->created_at->diffForHumans() }}</p>
+          <form action="{{ route('djancok', $file->id) }}" method="post">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <a href="{{ route('downloadfile', $file->id) }}" class="btn btn-primary">Download File</a>
+          </form>
         </div>
       </div>
     </div>
     @endforeach
   </div>
 </div>
+<script>
+    $(".alert-success").fadeTo(2000, 500).slideUp(500, function() {
+      $(".alert-success").slideUp(500);
+    });
+</script>
 @endsection

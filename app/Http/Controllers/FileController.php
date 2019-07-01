@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\File;
+use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
@@ -44,13 +45,15 @@ class FileController extends Controller
         $this->validate($request, [
           'file' => 'mimes:jpeg,jpg,png,gif|required|file|max:20000'
         ]);
-        $upload = $request->file('file');
-        $path = $upload->store('public/storage');
-        $file = File::create([
-          'title' => $upload->getClientOriginalName(),
-          'description' => '',
-          'path' => $path
-        ]);
+        $files = $request->file('file');
+        // dd($files);
+        // foreach ($files as $file) {
+          File::create([
+            'title' => $files->getClientOriginalName(),
+            'description' => '',
+            'path' => $files->store('public/storage')
+          ]);
+        // }
         return redirect('/file')->with('success', 'File Berhasil Diupload');
     }
 
@@ -62,7 +65,8 @@ class FileController extends Controller
      */
     public function show($id)
     {
-        //
+        $download = File::find($id);
+        return Storage::download($download->path, $download->title);
     }
 
     /**
@@ -96,6 +100,11 @@ class FileController extends Controller
      */
     public function destroy($id)
     {
-        //
+      // dd($id);
+        $del = File::find($id);
+        Storage::delete($del->path);
+        $del->delete();
+
+        return redirect('/file')->with('success', 'Foto Berhasil Dihapus');
     }
 }
