@@ -42,7 +42,7 @@ class FileController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-          'file' => 'required|file|max:20000'
+          'file' => 'mimes:jpeg,jpg,png,gif|required|file|max:20000'
         ]);
         $upload = $request->file('file');
         $path = $upload->store('public/storage');
