@@ -2,7 +2,7 @@
 @section('content')
 <div class="contaner">
   <div class="row">
-    <div class="col-md-6 col-md-offset-4">
+    <div class="col-md-6 col-offset-md-4">
       <div class="card">
         <h5 class="card-header">Form File Upload</h5>
         <div class="card-body">
