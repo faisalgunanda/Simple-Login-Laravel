@@ -46,14 +46,14 @@ class FileController extends Controller
           'file' => 'mimes:jpeg,jpg,png,gif|required|file|max:20000'
         ]);
         $files = $request->file('file');
-        foreach ($files as $file) {
-          $upload = $request->file('file');
+        // dd($files);
+        // foreach ($files as $file) {
           File::create([
-            'title' => $upload->getClientOriginalName(),
+            'title' => $files->getClientOriginalName(),
             'description' => '',
-            'path' => $file->store('public/storage')
+            'path' => $files->store('public/storage')
           ]);
-        }
+        // }
         return redirect('/file')->with('success', 'File Berhasil Diupload');
     }
 
@@ -65,7 +65,8 @@ class FileController extends Controller
      */
     public function show($id)
     {
-        //
+        $download = File::find($id);
+        return Storage::download($download->path, $download->title);
     }
 
     /**
