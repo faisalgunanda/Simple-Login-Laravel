@@ -44,4 +44,10 @@ return [
         ],
     ],
 
+    'facebook' => [
+      'client_id' => '373613393504735',
+      'client_secret' => 'a064359673c3ab72931926264a26570b',
+      'redirect' => 'https://simple-login.io/login/facebook/callback'
+    ]
+
 ];
