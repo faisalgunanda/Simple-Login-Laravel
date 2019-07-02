@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Socialite;
+use App\SocialAccount;
+use App\User;
 
 class LoginController extends Controller
 {
@@ -43,5 +46,38 @@ class LoginController extends Controller
         return back()->with('warning', 'You need to confirm your account. We have send you and activation code, please check your email.');
       }
       return redirect()->intended($this->redirectPath());
+    }
+
+    public function redirectToFacebook()
+    {
+      return Socialite::driver('facebook')->redirect();
+    }
+
+    public function handleFacebookCallback()
+    {
+      $provider = Socialite::driver('facebook')->user();
+      $account = SocialAccount::where('provider', 'facebook')->where('provider_user_id', $provider->getId())->first();
+      if($account){
+        $user = $account->user;
+      }else{
+        $akun = new SocialAccount([
+          'provider_user_id' => $provider->getId(),
+          'provider' => 'facebook'
+        ]);
+        $orang = User::where('email',$provider->getEmail())->first();
+        if(!$orang){
+          $orang = User::create([
+            'name'=> $provider->getName(),
+            'email' => $provider->getEmail(),
+            'password' => '',
+            'verified' => '1',
+          ]);
+        }
+        $akun->user()->associate($orang);
+        $akun->save();
+        $user = $orang;
+      }
+      auth()->login($user);
+      return redirect()->to('/home');
     }
 }
