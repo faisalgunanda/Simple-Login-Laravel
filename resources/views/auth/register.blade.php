@@ -75,6 +75,10 @@
                                 <i class="fa fa-facebook"></i>
                                 Sign up with Facebook
                                 </a>
+                                <a href="{{ url('/login/github') }}" class="btn btn-github">
+                                    <i class="fa fa-github"></i>
+                                    Sign up with Github
+                                </a>
                             </div>
                         </div>
                     </form>

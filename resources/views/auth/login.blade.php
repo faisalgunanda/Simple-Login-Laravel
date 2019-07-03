@@ -74,10 +74,20 @@
                 @endif
               </div>
             </div>
+            <br>
+            <div class="form-group row mb-0">
+                <div class="col-md-12">
+                    <a href="{{ url('/login/facebook') }}" class="btn btn-facebook">
+                        <i class="fa fa-facebook"></i>
+                        Log in with Facebook
+                    </a>
+                    <a href="{{ url('/login/github') }}" class="btn btn-github">
+                        <i class="fa fa-github"></i>
+                        Log in with Github
+                    </a>
+                </div>
+            </div>
           </form>
-          <p>
-            <a href="{{ url('auth/facebook') }}" class="btn btn-primary">Login With Facebook</a>
-          </p>
         </div>
       </div>
     </div>

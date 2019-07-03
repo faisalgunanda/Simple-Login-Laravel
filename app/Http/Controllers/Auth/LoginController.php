@@ -59,6 +59,7 @@ class LoginController extends Controller
         try {
             $user = Socialite::driver($provider)->user();
         } catch (\Throwable $th) {
+            dd($th);
             return redirect('/login');
         }
 
