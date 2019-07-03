@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Socialite;
 use App\SocialAccount;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -48,36 +49,50 @@ class LoginController extends Controller
       return redirect()->intended($this->redirectPath());
     }
 
-    public function redirectToFacebook()
+    public function redirectToFacebook($provider)
     {
-      return Socialite::driver('facebook')->redirect();
+      return Socialite::driver($provider)->redirect();
     }
 
-    public function handleFacebookCallback()
+    public function handleProviderCallback($provider)
     {
-      $provider = Socialite::driver('facebook')->user();
-      $account = SocialAccount::where('provider', 'facebook')->where('provider_user_id', $provider->getId())->first();
-      if($account){
-        $user = $account->user;
-      }else{
-        $akun = new SocialAccount([
-          'provider_user_id' => $provider->getId(),
-          'provider' => 'facebook'
-        ]);
-        $orang = User::where('email',$provider->getEmail())->first();
-        if(!$orang){
-          $orang = User::create([
-            'name'=> $provider->getName(),
-            'email' => $provider->getEmail(),
-            'password' => '',
-            'verified' => '1',
-          ]);
+        try {
+            $user = Socialite::driver($provider)->user();
+        } catch (\Throwable $th) {
+            return redirect('/login');
         }
-        $akun->user()->associate($orang);
-        $akun->save();
-        $user = $orang;
-      }
-      auth()->login($user);
-      return redirect()->to('/home');
+
+        $authUser = $this->findOrCreateUser($user, $provider);
+
+        Auth::login($authUser, true);
+
+        return redirect('/home');
+    }
+
+    public function findOrCreateUser($socialUser, $provider)
+    {
+        $socialAccount = SocialAccount::where('provider_user_id', $socialUser->getId())
+                        ->where('provider', $provider)
+                        ->first();
+
+        if ($socialAccount) {
+            return $socialAccount->user;
+        } else {
+            $user = User::where('email', $socialUser->getEmail())->first();
+
+            if (!$user) {
+                $user = User::create([
+                    'name' => $socialUser->getName(),
+                    'email' => $socialUser->getEmail()
+                ]);
+            }
+
+            $user->socialAccounts()->create([
+                'provider_user_id' => $socialUser->getId(),
+                'provider' => $provider
+            ]);
+
+            return $user;
+        }
     }
 }
