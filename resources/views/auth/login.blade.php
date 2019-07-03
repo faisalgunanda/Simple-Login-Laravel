@@ -76,7 +76,7 @@
             </div>
           </form>
           <p>
-            <a href="{{ route('fblogin')}}" class="btn btn-primary">Login With Facebook</a>
+            <a href="{{ url('auth/facebook') }}" class="btn btn-primary">Login With Facebook</a>
           </p>
         </div>
       </div>
